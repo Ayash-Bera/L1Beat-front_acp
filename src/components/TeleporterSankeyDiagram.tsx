@@ -55,54 +55,12 @@ export function TeleporterSankeyDiagram() {
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const { theme } = useTheme();
-  // Track theme changes and force redraw
-  const [, forceUpdate] = useState({});
   
-  // This effect runs when theme changes and forces a complete redraw
-  useEffect(() => {
-    if (data && svgRef.current) {
-      console.log("Theme changed to:", theme, "- forcing chart redraw");
-      // Clear the SVG
-      d3.select(svgRef.current).selectAll('*').remove();
-      // Force a component update by setting a new empty object reference
-      forceUpdate({});
-    }
-  }, [theme, data]);
-  
-  // Listen for theme change events from ThemeToggle
-  useEffect(() => {
-    const handleThemeChange = (event: CustomEvent) => {
-      console.log("Theme change event received:", event.detail);
-      if (data && svgRef.current) {
-        // Clear the SVG
-        d3.select(svgRef.current).selectAll('*').remove();
-        // Force a component update
-        forceUpdate({});
-      }
-    };
-    
-    window.addEventListener('themeChanged', handleThemeChange as EventListener);
-    
-    return () => {
-      window.removeEventListener('themeChanged', handleThemeChange as EventListener);
-    };
-  }, [data]);
-
-  // This effect directly updates text colors when theme changes
-  useEffect(() => {
-    if (svgRef.current) {
-      // Find all node labels in the diagram and update their fill color directly
-      const nodeLabels = d3.select(svgRef.current).selectAll('.node-label');
-      nodeLabels.attr('fill', theme === 'dark' ? '#ffffff' : '#000000');
-      
-      console.log(`Directly updated ${nodeLabels.size()} node labels to ${theme === 'dark' ? 'white' : 'black'}`);
-    }
-  }, [theme]);
-
-  // Create a single, definitive function to force text colors
+  // Force text colors to always be white for dark background
   const forceTextColors = useCallback(() => {
-    const textColor = theme === 'dark' ? '#ffffff' : '#000000';
-    const secondaryTextColor = theme === 'dark' ? 'rgba(226, 232, 240, 0.7)' : 'rgba(30, 41, 59, 0.7)';
+    // Always use white text since we have a dark background
+    const textColor = '#ffffff';
+    const secondaryTextColor = 'rgba(255, 255, 255, 0.7)';
     
     // Force direct DOM updates to ensure color consistency
     document.querySelectorAll('.node-label').forEach(el => {
@@ -112,14 +70,14 @@ export function TeleporterSankeyDiagram() {
     document.querySelectorAll('.value-label, .diagram-title').forEach(el => {
       el.setAttribute('fill', secondaryTextColor);
     });
-  }, [theme]);
+  }, []);
   
   // Apply text colors immediately after any state change that might affect them
   useEffect(() => {
     // Use setTimeout to ensure this runs after any React updates
     const timer = setTimeout(forceTextColors, 0);
     return () => clearTimeout(timer);
-  }, [theme, hoveredNode, hoveredLink, forceTextColors]);
+  }, [hoveredNode, hoveredLink, forceTextColors]);
   
   // Apply text colors when the diagram is first drawn or redrawn
   useEffect(() => {
@@ -135,22 +93,13 @@ export function TeleporterSankeyDiagram() {
     const fixColorsAfterTooltip = () => {
       // Use RAF to ensure this runs after DOM updates
       requestAnimationFrame(() => {
-        const textColor = theme === 'dark' ? '#ffffff' : '#000000';
+        // Always use white text for dark background
+        const textColor = '#ffffff';
         
-        // Force all node labels to have the correct theme color
+        // Force all node labels to have white color
         document.querySelectorAll('.node-label').forEach(el => {
           el.setAttribute('fill', textColor);
         });
-        
-        // Only run in light theme - this is for additional safety
-        if (theme === 'light') {
-          // Make absolutely sure text is black in light theme
-          setTimeout(() => {
-            document.querySelectorAll('.node-label').forEach(el => {
-              el.setAttribute('fill', '#000000');
-            });
-          }, 10);
-        }
       });
     };
     
@@ -163,7 +112,7 @@ export function TeleporterSankeyDiagram() {
       clearTimeout(t1);
       clearTimeout(t2);
     };
-  }, [hoveredNode, hoveredLink, theme]);
+  }, [hoveredNode, hoveredLink]);
   
   // Function to format chain names for better readability
   const formatChainName = (name: string) => {
@@ -184,16 +133,16 @@ export function TeleporterSankeyDiagram() {
   const getChainColor = useCallback((chainName: string) => {
     // Predefined colors for common chains
     const colorMap: Record<string, string> = {
-      'Avalanche (C-Chain)': theme === 'dark' ? '#E84142' : '#E84142', // Avalanche red
-      'C-Chain': theme === 'dark' ? '#E84142' : '#E84142', // Avalanche red
-      'Dexalot L1': theme === 'dark' ? '#2775CA' : '#2775CA', // Blue
-      'Dexalot': theme === 'dark' ? '#2775CA' : '#2775CA', // Blue
-      'zeroone Mainnet L1': theme === 'dark' ? '#8A2BE2' : '#8A2BE2', // Purple
-      'ZeroOne': theme === 'dark' ? '#8A2BE2' : '#8A2BE2', // Purple
-      'Lamina1 L1': theme === 'dark' ? '#00BFFF' : '#00BFFF', // Deep sky blue
-      'Lamina1': theme === 'dark' ? '#00BFFF' : '#00BFFF', // Deep sky blue
-      'PLYR PHI L1': theme === 'dark' ? '#32CD32' : '#32CD32', // Lime green
-      'PLYR': theme === 'dark' ? '#32CD32' : '#32CD32', // Lime green
+      'Avalanche (C-Chain)': '#E84142', // Avalanche red
+      'C-Chain': '#E84142', // Avalanche red
+      'Dexalot L1': '#2775CA', // Blue
+      'Dexalot': '#2775CA', // Blue
+      'zeroone Mainnet L1': '#8A2BE2', // Purple
+      'ZeroOne': '#8A2BE2', // Purple
+      'Lamina1 L1': '#00BFFF', // Deep sky blue
+      'Lamina1': '#00BFFF', // Deep sky blue
+      'PLYR PHI L1': '#32CD32', // Lime green
+      'PLYR': '#32CD32', // Lime green
     };
     
     // Return predefined color if available
@@ -207,11 +156,11 @@ export function TeleporterSankeyDiagram() {
     }, 0);
     
     const h = Math.abs(hash) % 360;
-    const s = theme === 'dark' ? '80%' : '70%';
-    const l = theme === 'dark' ? '60%' : '50%';
+    const s = '80%';
+    const l = '60%';
     
     return `hsl(${h}, ${s}, ${l})`;
-  }, [theme]);
+  }, []);
 
   // Function to find chain ID from chain name
   const findChainId = (chainName: string) => {
@@ -476,7 +425,7 @@ export function TeleporterSankeyDiagram() {
         .append('path')
         .attr('d', 'M 20 0 L 0 0 0 20')
         .attr('fill', 'none')
-        .attr('stroke', theme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)')
+        .attr('stroke', 'rgba(255, 255, 255, 0.05)')
         .attr('stroke-width', 0.5);
       
       // Add background grid
@@ -597,16 +546,10 @@ export function TeleporterSankeyDiagram() {
           setHoveredLink(d);
           setTooltipPosition({ x: event.pageX, y: event.pageY });
           
-          // CRITICAL: Force all node labels to have the correct theme color IMMEDIATELY
-          const textColor = theme === 'dark' ? '#ffffff' : '#000000';
-          document.querySelectorAll('.node-label').forEach(el => {
-            el.setAttribute('fill', textColor);
-          });
-          
-          // Also apply after a delay to catch any late renders
+          // Force white text color for dark background
           setTimeout(() => {
             document.querySelectorAll('.node-label').forEach(el => {
-              el.setAttribute('fill', textColor);
+              el.setAttribute('fill', '#ffffff');
             });
           }, 50);
         })
@@ -621,16 +564,10 @@ export function TeleporterSankeyDiagram() {
           
           setHoveredLink(null);
           
-          // CRITICAL: Force all node labels to have the correct theme color IMMEDIATELY
-          const textColor = theme === 'dark' ? '#ffffff' : '#000000';
-          document.querySelectorAll('.node-label').forEach(el => {
-            el.setAttribute('fill', textColor);
-          });
-          
-          // Also apply after a delay to catch any late renders
+          // Force white text color for dark background
           setTimeout(() => {
             document.querySelectorAll('.node-label').forEach(el => {
-              el.setAttribute('fill', textColor);
+              el.setAttribute('fill', '#ffffff');
             });
           }, 50);
         });
@@ -654,16 +591,10 @@ export function TeleporterSankeyDiagram() {
           setHoveredNode(d);
           setTooltipPosition({ x: event.pageX, y: event.pageY });
           
-          // CRITICAL: Force all node labels to have the correct theme color IMMEDIATELY
-          const textColor = theme === 'dark' ? '#ffffff' : '#000000';
-          document.querySelectorAll('.node-label').forEach(el => {
-            el.setAttribute('fill', textColor);
-          });
-          
-          // Also apply after a delay to catch any late renders
+          // Force white text color for dark background
           setTimeout(() => {
             document.querySelectorAll('.node-label').forEach(el => {
-              el.setAttribute('fill', textColor);
+              el.setAttribute('fill', '#ffffff');
             });
           }, 50);
         })
@@ -673,16 +604,10 @@ export function TeleporterSankeyDiagram() {
         .on('mouseout', function() {
           setHoveredNode(null);
           
-          // CRITICAL: Force all node labels to have the correct theme color IMMEDIATELY
-          const textColor = theme === 'dark' ? '#ffffff' : '#000000';
-          document.querySelectorAll('.node-label').forEach(el => {
-            el.setAttribute('fill', textColor);
-          });
-          
-          // Also apply after a delay to catch any late renders
+          // Force white text color for dark background
           setTimeout(() => {
             document.querySelectorAll('.node-label').forEach(el => {
-              el.setAttribute('fill', textColor);
+              el.setAttribute('fill', '#ffffff');
             });
           }, 50);
         });
@@ -725,7 +650,7 @@ export function TeleporterSankeyDiagram() {
           .attr('height', d.y1 - d.y0)
           .attr('width', d.x1 - d.x0)
           .attr('fill', 'none')
-          .attr('stroke', theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)')
+          .attr('stroke', 'rgba(255,255,255,0.1)')
           .attr('stroke-width', 1)
           .attr('rx', 4)
           .attr('ry', 4)
@@ -758,7 +683,7 @@ export function TeleporterSankeyDiagram() {
         }
       });
       
-      // Add labels for the nodes
+      // Add labels for the nodes - ALWAYS WHITE for dark background
       nodes_g.append('text')
         .attr('x', d => d.x0 < width / 2 ? d.x1 - d.x0 + 6 : -6)
         .attr('y', d => (d.y1 - d.y0) / 2)
@@ -766,12 +691,12 @@ export function TeleporterSankeyDiagram() {
         .attr('text-anchor', d => d.x0 < width / 2 ? 'start' : 'end')
         .attr('class', 'node-label')  // Add a class to help with direct updates
         .text(d => d.displayName)
-        .attr('fill', theme === 'dark' ? '#ffffff' : '#000000')
+        .attr('fill', '#ffffff') // Always white for dark background
         .attr('font-weight', 'bold')
         .attr('font-size', '12px')
         .attr('pointer-events', 'none');
       
-      // Add value labels
+      // Add value labels - ALWAYS WHITE for dark background
       nodes_g.append('text')
         .attr('x', d => d.x0 < width / 2 ? d.x1 - d.x0 + 6 : -6)
         .attr('y', d => (d.y1 - d.y0) / 2 + 16)
@@ -779,11 +704,11 @@ export function TeleporterSankeyDiagram() {
         .attr('class', 'value-label')  // Add a class to help with direct updates
         .attr('text-anchor', d => d.x0 < width / 2 ? 'start' : 'end')
         .text(d => `${d.value.toLocaleString()} msgs`)
-        .attr('fill', theme === 'dark' ? 'rgba(226, 232, 240, 0.7)' : 'rgba(30, 41, 59, 0.7)')
+        .attr('fill', 'rgba(255, 255, 255, 0.7)') // Always white with transparency for dark background
         .attr('font-size', '10px')
         .attr('pointer-events', 'none');
       
-      // Add a title and legend
+      // Add a title and legend - ALWAYS WHITE for dark background
       svg.append('text')
         .attr('x', width / 2)
         .attr('y', -5)
@@ -791,7 +716,7 @@ export function TeleporterSankeyDiagram() {
         .attr('text-anchor', 'middle')
         .attr('font-size', '12px')
         .attr('font-weight', 'bold')
-        .attr('fill', theme === 'dark' ? 'rgba(226, 232, 240, 0.7)' : 'rgba(30, 41, 59, 0.7)')
+        .attr('fill', 'rgba(255, 255, 255, 0.7)') // Always white with transparency for dark background
         .text(`Total: ${data.metadata.totalMessages.toLocaleString()} messages`);
       
       // Add a reset button if a chain is selected
@@ -807,8 +732,8 @@ export function TeleporterSankeyDiagram() {
           .attr('height', 24)
           .attr('rx', 12)
           .attr('ry', 12)
-          .attr('fill', theme === 'dark' ? 'rgba(30, 41, 59, 0.8)' : 'rgba(226, 232, 240, 0.8)')
-          .attr('stroke', theme === 'dark' ? 'rgba(226, 232, 240, 0.2)' : 'rgba(30, 41, 59, 0.2)')
+          .attr('fill', 'rgba(255, 255, 255, 0.1)')
+          .attr('stroke', 'rgba(255, 255, 255, 0.2)')
           .attr('stroke-width', 1);
         
         resetButton.append('text')
@@ -817,7 +742,7 @@ export function TeleporterSankeyDiagram() {
           .attr('text-anchor', 'middle')
           .attr('dominant-baseline', 'middle')
           .attr('font-size', '10px')
-          .attr('fill', theme === 'dark' ? 'rgba(226, 232, 240, 0.9)' : 'rgba(30, 41, 59, 0.9)')
+          .attr('fill', 'rgba(255, 255, 255, 0.9)')
           .text('Reset Filter');
       }
       
@@ -831,8 +756,8 @@ export function TeleporterSankeyDiagram() {
     } catch (err) {
       console.error('Error rendering Sankey diagram:', err);
       
-      // Use consistent colors for error messages too
-      const errorTextColor = theme === 'dark' ? '#e2e8f0' : '#1e293b';
+      // Use white text for error messages on dark background
+      const errorTextColor = '#ffffff';
       
       // Display error message in the SVG
       svg.append('text')
@@ -852,7 +777,7 @@ export function TeleporterSankeyDiagram() {
         .text(err instanceof Error ? err.message : 'Unknown error');
     }
     
-  }, [data, getChainColor, theme, selectedChain, navigate, handleNodeClick]);
+  }, [data, getChainColor, selectedChain, navigate, handleNodeClick]);
 
   // Handle window resize
   useEffect(() => {
@@ -940,7 +865,7 @@ export function TeleporterSankeyDiagram() {
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-2">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-            Avalanche Teleporter Messages
+            Avalanche Interchain Messages (ICM)
           </h3>
         </div>
         
@@ -992,13 +917,30 @@ export function TeleporterSankeyDiagram() {
       
       <div 
         ref={containerRef} 
-        className="relative bg-gradient-to-br from-gray-50 to-gray-100 dark:from-dark-900/70 dark:to-dark-900/90 rounded-lg border border-gray-100 dark:border-dark-700 h-[400px] overflow-hidden"
+        className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 rounded-lg border border-gray-700 dark:border-gray-800 h-[400px] overflow-hidden"
       >
-        {/* Force remount of SVG on theme change by using theme and timestamp in the key */}
+        {/* Dark space background with subtle, slow twinkling stars - matching network topology */}
+        <div className="absolute inset-0 overflow-hidden">
+          {Array.from({ length: 60 }).map((_, i) => (
+            <div 
+              key={`star-${i}`}
+              className="absolute rounded-full bg-white"
+              style={{
+                width: `${Math.random() * 1.5 + 0.5}px`,
+                height: `${Math.random() * 1.5 + 0.5}px`,
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animation: `twinkle ${Math.random() * 8 + 6}s ease-in-out infinite`,
+                animationDelay: `-${Math.random() * 8}s`,
+              }}
+            />
+          ))}
+        </div>
+        
+        {/* SVG for the Sankey diagram */}
         <svg 
           ref={svgRef} 
           className="w-full h-full" 
-          key={`sankey-${theme}-${Date.now().toString()}`}
         ></svg>
         
         {/* Tooltip for links */}
@@ -1010,8 +952,6 @@ export function TeleporterSankeyDiagram() {
               top: `${tooltipPosition.y - 80}px`,
               transform: 'translate(-50%, -100%)'
             }}
-            onMouseEnter={() => forceTextColors()}
-            onMouseLeave={() => forceTextColors()}
           >
             <div className="font-medium text-gray-900 dark:text-white mb-1">
               {hoveredLink.source.displayName} → {hoveredLink.target.displayName}
@@ -1034,8 +974,6 @@ export function TeleporterSankeyDiagram() {
               top: `${tooltipPosition.y - 80}px`,
               transform: 'translate(-50%, -100%)'
             }}
-            onMouseEnter={() => forceTextColors()}
-            onMouseLeave={() => forceTextColors()}
           >
             <div className="font-medium text-gray-900 dark:text-white mb-1">
               {hoveredNode.displayName}

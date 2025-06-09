@@ -146,6 +146,12 @@
     animation: ripple 2s ease-out infinite;
   }
 
+  /* Twinkling stars animation - much slower and more subtle */
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.1; }
+    50% { opacity: 0.3; }
+  }
+
   /* Markdown styles */
   .prose {
     @apply text-gray-900 dark:text-gray-100;
@@ -231,21 +237,12 @@
   }
 }
 
-/* Add these rules at the end of your CSS file */
-body[data-theme="dark"] .node-label {
+/* Force white text in Sankey diagram for both themes */
+.node-label {
   fill: #ffffff !important;
 }
 
-body[data-theme="light"] .node-label {
-  fill: #000000 !important;
-}
-
-body[data-theme="dark"] .value-label,
-body[data-theme="dark"] .diagram-title {
-  fill: rgba(226, 232, 240, 0.7) !important;
-}
-
-body[data-theme="light"] .value-label,
-body[data-theme="light"] .diagram-title {
-  fill: rgba(30, 41, 59, 0.7) !important;
+.value-label,
+.diagram-title {
+  fill: rgba(255, 255, 255, 0.7) !important;
 }

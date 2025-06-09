@@ -4,11 +4,11 @@ import { Chain, HealthStatus } from '../types';
 import { ChainCard } from '../components/ChainCard';
 import { StatusBar } from '../components/StatusBar';
 import { TVLChart } from '../components/TVLChart';
-import { TPSChart } from '../components/TPSChart';
+import { L1MetricsChart } from '../components/L1MetricsChart';
 import { TeleporterSankeyDiagram } from '../components/TeleporterSankeyDiagram';
 import { NetworkTopologyGraph } from '../components/NetworkTopologyGraph';
 import { Footer } from '../components/Footer';
-import { LayoutGrid, Activity, Network } from 'lucide-react';
+import { LayoutGrid, Activity, Network, Search } from 'lucide-react';
 import { TeleporterDailyChart } from '../components/TeleporterDailyChart';
 
 export function Dashboard() {
@@ -17,6 +17,7 @@ export function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [retrying, setRetrying] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   async function fetchData() {
     try {
@@ -67,6 +68,12 @@ export function Dashboard() {
 
     return () => clearInterval(healthInterval);
   }, []);
+
+  // Filter chains based on search term
+  const filteredChains = chains.filter(chain =>
+    chain.chainName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    chain.chainId.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   if (loading) {
     return (
@@ -134,18 +141,41 @@ export function Dashboard() {
         </div>
 
         <div className="mb-8">
-          <div className="flex items-center gap-2">
-            <LayoutGrid className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-              Active Chains
-            </h2>
-          </div>
-        </div>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            <div className="flex items-center gap-2">
+              <LayoutGrid className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                Active Chains
+              </h2>
+            </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {chains.map(chain => (
-            <ChainCard key={chain.chainId} chain={chain} />
-          ))}
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search className="h-5 w-5 text-gray-400" />
+              </div>
+              <input
+                type="text"
+                placeholder="Search chains by name or ID..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg leading-5 bg-white dark:bg-dark-800 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              />
+            </div>
+          </div>
+
+          {filteredChains.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-gray-500 dark:text-gray-400">
+                No chains found matching "{searchTerm}"
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredChains.map(chain => (
+                <ChainCard key={chain.chainId} chain={chain} />
+              ))}
+            </div>
+          )}
         </div>
       </main>
 

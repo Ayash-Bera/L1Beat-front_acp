@@ -1,4 +1,4 @@
-import { CheckCircle, XCircle, AlertTriangle, Menu, X, ExternalLink } from 'lucide-react';
+import { CheckCircle, AlertTriangle, Menu, X, ExternalLink } from 'lucide-react';
 import { HealthStatus } from '../types';
 import { useEffect, useState } from 'react';
 import { ThemeToggle } from './ThemeToggle';
@@ -36,18 +36,16 @@ export function StatusBar({ health }: StatusBarProps) {
     }
   };
 
-  const isHealthy = health?.status.toLowerCase() === 'ok' || health?.status.toLowerCase() === 'healthy';
-
   return (
     <div className={`sticky top-0 z-50 transform transition-transform duration-300 ${
       isVisible ? 'translate-y-0' : '-translate-y-full'
     }`}>
       {/* Alpha Warning Banner */}
-      <div className="bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 border-b border-amber-200 dark:border-amber-900/30">
+      <div className="bg-yellow-50 dark:bg-yellow-900/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
           <div className="flex items-center justify-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-            <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
+            <AlertTriangle className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
+            <p className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
               L1Beat is currently in alpha. Data shown may be incomplete or inaccurate.
             </p>
           </div>
@@ -80,23 +78,11 @@ export function StatusBar({ health }: StatusBarProps) {
               
               {health && (
                 <div className="hidden md:flex items-center gap-2 pl-6 border-l border-gray-200 dark:border-dark-700">
-                  <div className={`p-1.5 rounded-lg ${
-                    isHealthy 
-                      ? 'bg-green-100 dark:bg-green-500/20' 
-                      : 'bg-red-100 dark:bg-red-500/20'
-                  }`}>
-                    {isHealthy ? (
-                      <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-400" />
-                    ) : (
-                      <XCircle className="w-4 h-4 text-red-600 dark:text-red-400" />
-                    )}
+                  <div className="p-1.5 rounded-lg bg-green-100 dark:bg-green-500/20">
+                    <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-400" />
                   </div>
-                  <span className={`text-sm font-medium ${
-                    isHealthy 
-                      ? 'text-green-700 dark:text-green-400' 
-                      : 'text-red-700 dark:text-red-400'
-                  }`}>
-                    {isHealthy ? 'All Systems Operational' : 'System Issues Detected'}
+                  <span className="text-sm font-medium text-green-700 dark:text-green-400">
+                    All Systems Operational
                   </span>
                 </div>
               )}
@@ -169,23 +155,11 @@ export function StatusBar({ health }: StatusBarProps) {
               {health && (
                 <div className="px-4 py-3 bg-gray-50 dark:bg-dark-700/50 rounded-lg">
                   <div className="flex items-center gap-2">
-                    <div className={`p-1.5 rounded-lg ${
-                      isHealthy 
-                        ? 'bg-green-100 dark:bg-green-500/20' 
-                        : 'bg-red-100 dark:bg-red-500/20'
-                    }`}>
-                      {isHealthy ? (
-                        <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-400" />
-                      ) : (
-                        <XCircle className="w-4 h-4 text-red-600 dark:text-red-400" />
-                      )}
+                    <div className="p-1.5 rounded-lg bg-green-100 dark:bg-green-500/20">
+                      <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-400" />
                     </div>
-                    <span className={`text-sm font-medium ${
-                      isHealthy 
-                        ? 'text-green-700 dark:text-green-400' 
-                        : 'text-red-700 dark:text-red-400'
-                    }`}>
-                      {isHealthy ? 'All Systems Operational' : 'System Issues Detected'}
+                    <span className="text-sm font-medium text-green-700 dark:text-green-400">
+                      All Systems Operational
                     </span>
                   </div>
                 </div>

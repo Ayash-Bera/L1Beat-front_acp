@@ -5,7 +5,7 @@ import { getChains, getTPSHistory } from '../api';
 import { Chain, TPSHistory } from '../types';
 import { Activity, ArrowLeft, Server, Clock, Search, CheckCircle, XCircle, Info, Copy, Check } from 'lucide-react';
 import { StakeDistributionChart, getValidatorColor } from '../components/StakeDistributionChart';
-import { TPSChart } from '../components/TPSChart';
+import { L1MetricsChart } from '../components/L1MetricsChart';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { Footer } from '../components/Footer';
 import { useTheme } from '../hooks/useTheme';
@@ -214,7 +214,26 @@ export function ChainDetails() {
               )}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
+              {chain.networkToken && (
+                <div className="bg-gray-50 dark:bg-dark-800/50 rounded-lg p-4">
+                  <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Network Token</h3>
+                  <div className="flex items-center gap-3">
+                    {chain.networkToken.logoUri && (
+                      <img 
+                        src={chain.networkToken.logoUri} 
+                        alt={`${chain.networkToken.name} logo`}
+                        className="w-8 h-8 rounded-full"
+                      />
+                    )}
+                    <div>
+                      <p className="font-medium text-gray-900 dark:text-white">{chain.networkToken.name}</p>
+                      <p className="text-gray-500 dark:text-gray-400">{chain.networkToken.symbol}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="bg-gray-50 dark:bg-dark-800/50 rounded-lg p-4">
                 <div className="flex items-center gap-2 mb-3">
                   <Activity className={`w-5 h-5 ${tpsColor}`} />
@@ -243,27 +262,8 @@ export function ChainDetails() {
               </div>
             </div>
 
-            {chain.networkToken && (
-              <div className="border-t border-gray-200 dark:border-gray-700 p-6">
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Network Token</h3>
-                <div className="flex items-center gap-3">
-                  {chain.networkToken.logoUri && (
-                    <img 
-                      src={chain.networkToken.logoUri} 
-                      alt={`${chain.networkToken.name} logo`}
-                      className="w-8 h-8 rounded-full"
-                    />
-                  )}
-                  <div>
-                    <p className="font-medium text-gray-900 dark:text-white">{chain.networkToken.name}</p>
-                    <p className="text-gray-500 dark:text-gray-400">{chain.networkToken.symbol}</p>
-                  </div>
-                </div>
-              </div>
-            )}
-
             <div className="border-t border-gray-200 dark:border-gray-700 p-6">
-              <TPSChart chainId={chain.chainId} chainName={chain.chainName} />
+              <L1MetricsChart chainId={chain.chainId} chainName={chain.chainName} />
             </div>
 
             <div className="border-t border-gray-200 dark:border-gray-700 p-6">

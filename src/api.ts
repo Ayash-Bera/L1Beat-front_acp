@@ -1,4 +1,4 @@
-import type { Chain, TVLHistory, TVLHealth, NetworkTPS, TPSHistory, HealthStatus, TeleporterMessageData, TeleporterDailyData } from './types';
+import type { Chain, TVLHistory, TVLHealth, NetworkTPS, TPSHistory, HealthStatus, TeleporterMessageData, TeleporterDailyData, CumulativeTxCount, CumulativeTxCountResponse } from './types';
 import { config } from './config';
 
 // XSS protection - sanitize strings in API responses
@@ -351,7 +351,7 @@ export async function getTPSHistory(days: number = 7, chainId?: string): Promise
     try {
       const timestamp = Math.floor(Date.now() / 1000);
       const url = chainId 
-        ? `${API_URL}/chains/${chainId}/tps/history?t=${timestamp}`
+        ? `${API_URL}/chains/${chainId}/tps/history?days=${days}&t=${timestamp}`
         : `${API_URL}/tps/network/history?days=${days}&t=${timestamp}`;
 
       const response = await fetchWithRetry<{
@@ -374,6 +374,27 @@ export async function getTPSHistory(days: number = 7, chainId?: string): Promise
         .sort((a, b) => a.timestamp - b.timestamp);
     } catch (error) {
       console.error('TPS history fetch error:', error);
+      return [];
+    }
+  });
+}
+
+export async function getCumulativeTxCount(chainId: string, days: number = 7): Promise<CumulativeTxCount[]> {
+  return fetchWithCache(`cumulative-tx-${chainId}-${days}`, async () => {
+    try {
+      const timestamp = Math.floor(Date.now() / 1000);
+      const response = await fetchWithRetry<CumulativeTxCountResponse>(
+        `${API_URL}/chains/${chainId}/cumulativeTxCount/history?days=${days}&t=${timestamp}`
+      );
+      
+      if (!response.success || !Array.isArray(response.data)) {
+        throw new Error('Invalid cumulative transaction count data format');
+      }
+
+      return response.data
+        .sort((a, b) => a.timestamp - b.timestamp);
+    } catch (error) {
+      console.error('Cumulative transaction count fetch error:', error);
       return [];
     }
   });

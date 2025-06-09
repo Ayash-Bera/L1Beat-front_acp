@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
-import { format, parseISO } from 'date-fns';
+import { format, parseISO, subDays } from 'date-fns';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -16,7 +16,7 @@ import { TeleporterDailyData, TimeframeOption } from '../types';
 import { getTeleporterDailyHistory } from '../api';
 import { useTheme } from '../hooks/useTheme';
 import { useMediaQuery, breakpoints } from '../hooks/useMediaQuery';
-import { AlertTriangle, MessageSquare, RefreshCw } from 'lucide-react';
+import { RefreshCw, MessageSquare, Clock } from 'lucide-react';
 
 ChartJS.register(
   CategoryScale,
@@ -49,7 +49,12 @@ export function TeleporterDailyChart() {
       const data = await getTeleporterDailyHistory(timeframe);
       
       if (data.length > 0) {
-        setDailyData(data.sort((a, b) => a.dateString.localeCompare(b.dateString)));
+        // Sort data by date and take only the last N days based on timeframe
+        const sortedData = data
+          .sort((a, b) => a.dateString.localeCompare(b.dateString))
+          .slice(-timeframe);
+        
+        setDailyData(sortedData);
       } else {
         throw new Error('No daily message data available');
       }
@@ -90,7 +95,7 @@ export function TeleporterDailyChart() {
     );
   }
 
-  if (error || !dailyData.length) {
+  if (!dailyData.length) {
     return (
       <div className="bg-white dark:bg-dark-800 rounded-lg shadow-md p-4 sm:p-6">
         <div className="flex items-center gap-2 mb-6">
@@ -98,7 +103,6 @@ export function TeleporterDailyChart() {
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Daily Message Volume</h3>
         </div>
         <div className="h-[300px] sm:h-[400px] flex flex-col items-center justify-center">
-          <AlertTriangle className="h-12 w-12 text-yellow-500 mb-4" />
           <p className="text-gray-600 dark:text-gray-300 text-center mb-4">
             {error || 'No daily message data available'}
           </p>
@@ -227,7 +231,7 @@ export function TeleporterDailyChart() {
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Daily Message Volume</h3>
             </div>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-              Last updated: {format(parseISO(latestData.date), 'MMM d, h:mm a')}
+              Last updated: {format(parseISO(latestData?.date || new Date().toISOString()), 'MMM d, h:mm a')}
             </p>
           </div>
 

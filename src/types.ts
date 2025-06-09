@@ -58,6 +58,19 @@ export interface TPSHistory {
   date: number;
 }
 
+// Cumulative Transaction Count types
+export interface CumulativeTxCount {
+  timestamp: number;
+  value: number;
+}
+
+export interface CumulativeTxCountResponse {
+  success: boolean;
+  chainId: string;
+  count: number;
+  data: CumulativeTxCount[];
+}
+
 // Health related types
 export interface HealthStatus {
   status: string;
@@ -96,3 +109,19 @@ export interface TeleporterDailyData {
 }
 
 export type TimeframeOption = 7 | 14 | 30;
+
+// ACP related types
+export interface ACP {
+  number: string;
+  title: string;
+  authors: Author[];
+  status: string;
+  track: string;
+  content: string;
+  discussion?: string;
+}
+
+export interface Author {
+  name: string;
+  github: string;
+}
