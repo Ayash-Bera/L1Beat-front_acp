@@ -22,10 +22,12 @@ import {
 } from 'lucide-react';
 import { getACPByNumber, LocalACP } from '../data/acps';
 import 'github-markdown-css/github-markdown.css';
+import { useTheme } from '../hooks/useTheme';
 
 export function ACPDetails() {
   const { number } = useParams();
   const navigate = useNavigate();
+  const { theme } = useTheme();
   const [acp, setAcp] = useState<LocalACP | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -59,6 +61,16 @@ export function ACPDetails() {
       fetchACP();
     }
   }, [number]);
+
+  // Configure marked options for better rendering
+  useEffect(() => {
+    marked.setOptions({
+      breaks: true,
+      gfm: true,
+      headerIds: true,
+      headerPrefix: 'acp-',
+    });
+  }, []);
 
   function getStatusColor(status: string): string {
     const statusLower = status.toLowerCase();
@@ -356,7 +368,7 @@ export function ACPDetails() {
           <div className="bg-white dark:bg-dark-800 rounded-lg shadow-md overflow-hidden">
             <div className="p-6">
               <div
-                className="prose dark:prose-invert max-w-none markdown-body"
+                className={`acp-markdown-content ${theme === 'dark' ? 'markdown-body-dark' : 'markdown-body'} max-w-none`}
                 dangerouslySetInnerHTML={{ __html: marked(acp.content) }}
               />
             </div>

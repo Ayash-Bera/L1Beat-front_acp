@@ -25,9 +25,7 @@
 
 @layer components {
   .stat-card {
-    @apply relative overflow-hidden bg-white dark:bg-dark-800/50 backdrop-blur-sm rounded-xl shadow-[var(--card-shadow)] 
-           hover:shadow-[var(--card-shadow-hover)] transition-all duration-300 transform hover:-translate-y-1
-           border border-gray-100/10 dark:border-dark-700/50;
+    @apply relative overflow-hidden bg-white dark:bg-dark-800/50 backdrop-blur-sm rounded-xl shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] transition-all duration-300 transform hover:-translate-y-1 border border-gray-100/10 dark:border-dark-700/50;
   }
 
   .stat-card::before {
@@ -36,9 +34,7 @@
   }
 
   .chart-container {
-    @apply bg-white dark:bg-dark-800/50 backdrop-blur-sm rounded-xl shadow-[var(--card-shadow)]
-           hover:shadow-[var(--card-shadow-hover)] transition-all duration-300
-           border border-gray-100/10 dark:border-dark-700/50;
+    @apply bg-white dark:bg-dark-800/50 backdrop-blur-sm rounded-xl shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] transition-all duration-300 border border-gray-100/10 dark:border-dark-700/50;
   }
 
   .status-pill {
@@ -59,8 +55,7 @@
 
   /* Theme toggle button styles */
   .theme-toggle {
-    @apply p-2 rounded-lg bg-gray-100 dark:bg-dark-700 hover:bg-gray-200 dark:hover:bg-dark-600
-           transition-all duration-200 border border-gray-200 dark:border-dark-600;
+    @apply p-2 rounded-lg bg-gray-100 dark:bg-dark-700 hover:bg-gray-200 dark:hover:bg-dark-600 transition-all duration-200 border border-gray-200 dark:border-dark-600;
   }
 
   .theme-toggle svg {
@@ -73,8 +68,15 @@
 
   /* Custom transition for theme toggle icon */
   @keyframes rotate-fade {
-    0% { transform: rotate(-180deg) scale(0.5); opacity: 0; }
-    100% { transform: rotate(0) scale(1); opacity: 1; }
+    0% {
+      transform: rotate(-180deg) scale(0.5);
+      opacity: 0;
+    }
+
+    100% {
+      transform: rotate(0) scale(1);
+      opacity: 1;
+    }
   }
 
   .theme-icon-enter {
@@ -83,21 +85,61 @@
 
   /* Heartbeat animation */
   @keyframes heartbeat {
-    0% { transform: scale(1); }
-    14% { transform: scale(1.3); }
-    28% { transform: scale(1); }
-    42% { transform: scale(1.3); }
-    70% { transform: scale(1); }
-    100% { transform: scale(1); }
+    0% {
+      transform: scale(1);
+    }
+
+    14% {
+      transform: scale(1.3);
+    }
+
+    28% {
+      transform: scale(1);
+    }
+
+    42% {
+      transform: scale(1.3);
+    }
+
+    70% {
+      transform: scale(1);
+    }
+
+    100% {
+      transform: scale(1);
+    }
   }
 
   @keyframes heartbeat-glow {
-    0% { opacity: 0; transform: scale(1); }
-    14% { opacity: 1; transform: scale(1.5); }
-    28% { opacity: 0.3; transform: scale(1); }
-    42% { opacity: 1; transform: scale(1.5); }
-    70% { opacity: 0; transform: scale(1); }
-    100% { opacity: 0; transform: scale(1); }
+    0% {
+      opacity: 0;
+      transform: scale(1);
+    }
+
+    14% {
+      opacity: 1;
+      transform: scale(1.5);
+    }
+
+    28% {
+      opacity: 0.3;
+      transform: scale(1);
+    }
+
+    42% {
+      opacity: 1;
+      transform: scale(1.5);
+    }
+
+    70% {
+      opacity: 0;
+      transform: scale(1);
+    }
+
+    100% {
+      opacity: 0;
+      transform: scale(1);
+    }
   }
 
   .animate-heartbeat {
@@ -110,8 +152,15 @@
 
   /* Fade in animation for network topology labels */
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .animate-fade-in {
@@ -120,17 +169,42 @@
 
   /* Network topology animations */
   @keyframes float {
-    0% { transform: translate(0, 0); }
-    25% { transform: translate(10px, 10px); }
-    50% { transform: translate(5px, -5px); }
-    75% { transform: translate(-10px, 5px); }
-    100% { transform: translate(0, 0); }
+    0% {
+      transform: translate(0, 0);
+    }
+
+    25% {
+      transform: translate(10px, 10px);
+    }
+
+    50% {
+      transform: translate(5px, -5px);
+    }
+
+    75% {
+      transform: translate(-10px, 5px);
+    }
+
+    100% {
+      transform: translate(0, 0);
+    }
   }
 
   @keyframes pulse-slow {
-    0% { opacity: 0.4; transform: scale(1); }
-    50% { opacity: 0.7; transform: scale(1.05); }
-    100% { opacity: 0.4; transform: scale(1); }
+    0% {
+      opacity: 0.4;
+      transform: scale(1);
+    }
+
+    50% {
+      opacity: 0.7;
+      transform: scale(1.05);
+    }
+
+    100% {
+      opacity: 0.4;
+      transform: scale(1);
+    }
   }
 
   .animate-pulse-slow {
@@ -138,8 +212,15 @@
   }
 
   @keyframes ripple {
-    0% { transform: scale(0.8); opacity: 1; }
-    100% { transform: scale(1.2); opacity: 0; }
+    0% {
+      transform: scale(0.8);
+      opacity: 1;
+    }
+
+    100% {
+      transform: scale(1.2);
+      opacity: 0;
+    }
   }
 
   .animate-ripple {
@@ -148,8 +229,215 @@
 
   /* Twinkling stars animation - much slower and more subtle */
   @keyframes twinkle {
-    0%, 100% { opacity: 0.1; }
-    50% { opacity: 0.3; }
+
+    0%,
+    100% {
+      opacity: 0.1;
+    }
+
+    50% {
+      opacity: 0.3;
+    }
+  }
+
+  /* ACP Markdown Content Styling - FIXED VERSION */
+  .acp-markdown-content {
+    @apply text-gray-900 dark:text-gray-100;
+    background: transparent !important;
+    color: inherit !important;
+  }
+
+  /* Override GitHub markdown CSS for proper theme support */
+  .markdown-body {
+    @apply bg-transparent text-gray-900;
+    color: rgb(31 41 55) !important;
+    /* gray-800 */
+    background-color: transparent !important;
+  }
+
+  .markdown-body-dark {
+    @apply bg-transparent text-gray-100;
+    color: rgb(243 244 246) !important;
+    /* gray-100 */
+    background-color: transparent !important;
+  }
+
+  /* Fix all markdown elements for proper theming */
+  .acp-markdown-content h1,
+  .acp-markdown-content h2,
+  .acp-markdown-content h3,
+  .acp-markdown-content h4,
+  .acp-markdown-content h5,
+  .acp-markdown-content h6 {
+    @apply text-gray-900 dark:text-white font-bold border-b border-gray-200 dark:border-gray-700;
+    color: inherit !important;
+    border-bottom-color: currentColor !important;
+  }
+
+  .acp-markdown-content h1 {
+    @apply text-3xl mb-6 mt-8 pb-2;
+  }
+
+  .acp-markdown-content h2 {
+    @apply text-2xl mb-4 mt-6 pb-2;
+  }
+
+  .acp-markdown-content h3 {
+    @apply text-xl mb-3 mt-5 pb-1;
+  }
+
+  .acp-markdown-content h4 {
+    @apply text-lg mb-3 mt-4;
+  }
+
+  .acp-markdown-content p {
+    @apply mb-4 leading-relaxed text-gray-700 dark:text-gray-300;
+    color: inherit !important;
+  }
+
+  .acp-markdown-content ul,
+  .acp-markdown-content ol {
+    @apply mb-4 pl-6 space-y-2 text-gray-700 dark:text-gray-300;
+    color: inherit !important;
+  }
+
+  .acp-markdown-content li {
+    @apply mb-1;
+    color: inherit !important;
+  }
+
+  .acp-markdown-content ul {
+    list-style-type: disc;
+  }
+
+  .acp-markdown-content ol {
+    list-style-type: decimal;
+  }
+
+  .acp-markdown-content blockquote {
+    @apply border-l-4 border-blue-500 pl-4 my-4 italic text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-800 py-2 rounded-r;
+    color: inherit !important;
+    background-color: rgb(249 250 251) !important;
+  }
+
+  .dark .acp-markdown-content blockquote {
+    background-color: rgb(31 41 55) !important;
+  }
+
+  .acp-markdown-content code {
+    @apply font-mono text-sm bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-red-600 dark:text-red-400;
+    color: rgb(220 38 38) !important;
+    background-color: rgb(243 244 246) !important;
+  }
+
+  .dark .acp-markdown-content code {
+    color: rgb(248 113 113) !important;
+    background-color: rgb(31 41 55) !important;
+  }
+
+  .acp-markdown-content pre {
+    @apply mb-4 rounded-lg overflow-x-auto p-4 bg-gray-100 dark:bg-gray-800;
+    background-color: rgb(243 244 246) !important;
+  }
+
+  .dark .acp-markdown-content pre {
+    background-color: rgb(31 41 55) !important;
+  }
+
+  .acp-markdown-content pre code {
+    @apply bg-transparent text-gray-800 dark:text-gray-200 p-0;
+    color: inherit !important;
+    background-color: transparent !important;
+  }
+
+  .acp-markdown-content table {
+    @apply w-full mb-4 border-collapse;
+    color: inherit !important;
+  }
+
+  .acp-markdown-content thead {
+    @apply bg-gray-50 dark:bg-gray-800;
+    background-color: rgb(249 250 251) !important;
+  }
+
+  .dark .acp-markdown-content thead {
+    background-color: rgb(31 41 55) !important;
+  }
+
+  .acp-markdown-content th {
+    @apply text-left p-3 text-sm font-medium text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700;
+    color: inherit !important;
+    border-color: rgb(229 231 235) !important;
+  }
+
+  .dark .acp-markdown-content th {
+    border-color: rgb(75 85 99) !important;
+  }
+
+  .acp-markdown-content td {
+    @apply p-3 text-sm text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700;
+    color: inherit !important;
+    border-color: rgb(229 231 235) !important;
+  }
+
+  .dark .acp-markdown-content td {
+    border-color: rgb(75 85 99) !important;
+  }
+
+  .acp-markdown-content hr {
+    @apply my-8 border-gray-200 dark:border-gray-700;
+    border-color: rgb(229 231 235) !important;
+  }
+
+  .dark .acp-markdown-content hr {
+    border-color: rgb(75 85 99) !important;
+  }
+
+  .acp-markdown-content img {
+    @apply rounded-lg shadow-md max-w-full h-auto my-4;
+  }
+
+  .acp-markdown-content a {
+    @apply text-blue-600 dark:text-blue-400 hover:underline;
+    color: rgb(37 99 235) !important;
+  }
+
+  .dark .acp-markdown-content a {
+    color: rgb(96 165 250) !important;
+  }
+
+  .acp-markdown-content strong,
+  .acp-markdown-content b {
+    @apply font-bold text-gray-900 dark:text-white;
+    color: inherit !important;
+  }
+
+  .acp-markdown-content em,
+  .acp-markdown-content i {
+    @apply italic;
+    color: inherit !important;
+  }
+
+  /* Fix any remaining background issues */
+  .acp-markdown-content * {
+    background-color: transparent !important;
+  }
+
+  .acp-markdown-content pre,
+  .acp-markdown-content code,
+  .acp-markdown-content blockquote,
+  .acp-markdown-content thead {
+    background-color: rgb(249 250 251) !important;
+  }
+
+  .dark .acp-markdown-content pre,
+  .dark .acp-markdown-content blockquote,
+  .dark .acp-markdown-content thead {
+    background-color: rgb(31 41 55) !important;
+  }
+
+  .dark .acp-markdown-content code {
+    background-color: rgb(31 41 55) !important;
   }
 
   /* Markdown styles */
