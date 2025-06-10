@@ -1,6 +1,7 @@
 import { CheckCircle, AlertTriangle, Menu, X, ExternalLink } from 'lucide-react';
 import { HealthStatus } from '../types';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ThemeToggle } from './ThemeToggle';
 
 interface StatusBarProps {
@@ -8,10 +9,11 @@ interface StatusBarProps {
 }
 
 export function StatusBar({ health }: StatusBarProps) {
+  const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [showTooltip, setShowTooltip] = useState<'blog' | 'acps' | null>(null);
+  const [showTooltip, setShowTooltip] = useState<'blog' | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
@@ -32,14 +34,14 @@ export function StatusBar({ health }: StatusBarProps) {
   const handleLogoClick = () => {
     if (!isAnimating) {
       setIsAnimating(true);
+      navigate('/');
       setTimeout(() => setIsAnimating(false), 1000);
     }
   };
 
   return (
-    <div className={`sticky top-0 z-50 transform transition-transform duration-300 ${
-      isVisible ? 'translate-y-0' : '-translate-y-full'
-    }`}>
+    <div className={`sticky top-0 z-50 transform transition-transform duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'
+      }`}>
       {/* Alpha Warning Banner */}
       <div className="bg-yellow-50 dark:bg-yellow-900/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
@@ -63,19 +65,17 @@ export function StatusBar({ health }: StatusBarProps) {
                 className="relative transform transition-all duration-300 hover:scale-105 focus:outline-none group"
               >
                 <div
-                  className={`absolute inset-0 bg-red-500/20 dark:bg-red-500/30 rounded-lg filter blur-xl transition-opacity duration-500 ${
-                    isAnimating ? 'animate-heartbeat-glow' : 'opacity-0'
-                  }`}
+                  className={`absolute inset-0 bg-red-500/20 dark:bg-red-500/30 rounded-lg filter blur-xl transition-opacity duration-500 ${isAnimating ? 'animate-heartbeat-glow' : 'opacity-0'
+                    }`}
                 />
                 <img
                   src="https://raw.githubusercontent.com/muhammetselimfe/L1Beat/refs/heads/main/public/l1_logo_main_2.png"
                   alt="L1Beat"
-                  className={`h-8 w-auto relative ${
-                    isAnimating ? 'animate-heartbeat' : ''
-                  } transition-transform duration-300`}
+                  className={`h-8 w-auto relative ${isAnimating ? 'animate-heartbeat' : ''
+                    } transition-transform duration-300`}
                 />
               </button>
-              
+
               {health && (
                 <div className="hidden md:flex items-center gap-2 pl-6 border-l border-gray-200 dark:border-dark-700">
                   <div className="p-1.5 rounded-lg bg-green-100 dark:bg-green-500/20">
@@ -103,7 +103,7 @@ export function StatusBar({ health }: StatusBarProps) {
                     </div>
                   )}
                 </button>
-                
+
                 <a
                   href="https://docs.avax.network/"
                   target="_blank"
@@ -115,16 +115,10 @@ export function StatusBar({ health }: StatusBarProps) {
                 </a>
 
                 <button
-                  onClick={() => setShowTooltip('acps')}
-                  onMouseLeave={() => setShowTooltip(null)}
-                  className="relative px-3 py-1.5 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 shadow-sm"
+                  onClick={() => navigate('/acps')}
+                  className="px-3 py-1.5 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 shadow-sm"
                 >
                   ACPs
-                  {showTooltip === 'acps' && (
-                    <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-900 dark:bg-gray-700 text-white text-xs rounded">
-                      Coming soon
-                    </div>
-                  )}
                 </button>
               </div>
 
@@ -148,9 +142,8 @@ export function StatusBar({ health }: StatusBarProps) {
           </div>
 
           {/* Mobile Menu */}
-          <div className={`md:hidden transition-all duration-300 ease-in-out ${
-            isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 pointer-events-none'
-          }`}>
+          <div className={`md:hidden transition-all duration-300 ease-in-out ${isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 pointer-events-none'
+            }`}>
             <div className="py-3 space-y-3">
               {health && (
                 <div className="px-4 py-3 bg-gray-50 dark:bg-dark-700/50 rounded-lg">
@@ -191,15 +184,12 @@ export function StatusBar({ health }: StatusBarProps) {
 
                 <button
                   onClick={() => {
-                    setShowTooltip('acps');
-                    setTimeout(() => setShowTooltip(null), 2000);
+                    navigate('/acps');
+                    setIsMobileMenuOpen(false);
                   }}
                   className="w-full px-4 py-3 flex items-center justify-between text-sm font-medium text-gray-700 dark:text-gray-200 bg-gray-50 dark:bg-dark-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-dark-700"
                 >
                   <span>ACPs</span>
-                  {showTooltip === 'acps' && (
-                    <span className="text-xs text-blue-500 dark:text-blue-400">Coming soon</span>
-                  )}
                 </button>
               </div>
 
