@@ -534,3 +534,162 @@
 .diagram-title {
   fill: rgba(255, 255, 255, 0.7) !important;
 }
+/* Add these styles to your existing index.css file */
+
+/* Mermaid diagram container styles */
+.mermaid-container {
+  @apply mb-6 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800;
+}
+
+.mermaid-header {
+  @apply flex items-center justify-between px-4 py-2 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700;
+}
+
+.mermaid-diagram {
+  @apply p-4 bg-white dark:bg-gray-900 min-h-[200px];
+}
+
+.mermaid-code {
+  @apply hidden;
+}
+
+.mermaid-output {
+  @apply flex justify-center items-center min-h-[150px];
+}
+
+.mermaid-output svg {
+  @apply max-w-full h-auto;
+}
+
+.mermaid-output .mermaid-error {
+  @apply w-full;
+}
+
+/* Loading state */
+.mermaid-output:empty::before {
+  content: "Loading diagram...";
+  @apply text-gray-500 dark:text-gray-400 text-sm animate-pulse;
+}
+
+/* Enhanced code block styles for non-Mermaid content */
+.enhanced-code-block {
+  @apply mb-6 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800;
+}
+
+.code-header {
+  @apply flex items-center justify-between px-4 py-2 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700;
+}
+
+.code-dots {
+  @apply flex items-center gap-2;
+}
+
+.code-dots .dot {
+  @apply w-3 h-3 rounded-full;
+}
+
+.code-dots .dot.red {
+  @apply bg-red-500;
+}
+
+.code-dots .dot.yellow {
+  @apply bg-yellow-500;
+}
+
+.code-dots .dot.green {
+  @apply bg-green-500;
+}
+
+.code-language {
+  @apply text-xs font-mono font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide;
+}
+
+.code-content {
+  @apply p-4 bg-gray-50 dark:bg-gray-900 text-sm font-mono overflow-x-auto;
+}
+
+.code-content code {
+  @apply text-gray-800 dark:text-gray-200 bg-transparent;
+}
+
+/* Math styling improvements */
+.math-display {
+  @apply my-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-x-auto;
+}
+
+.math-inline {
+  @apply px-1 py-0.5 bg-gray-100 dark:bg-gray-800 rounded text-sm;
+}
+
+.math-block-align {
+  @apply my-6 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden;
+}
+
+.math-block-header {
+  @apply px-4 py-2 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300;
+}
+
+.math-content {
+  @apply p-4 bg-white dark:bg-gray-900 overflow-x-auto;
+}
+
+.math-error {
+  @apply text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 p-2 rounded border border-red-200 dark:border-red-700;
+}
+
+.math-term {
+  @apply text-blue-600 dark:text-blue-400 font-medium;
+}
+
+/* Table container for better responsiveness */
+.table-container {
+  @apply overflow-x-auto my-4 border border-gray-200 dark:border-gray-700 rounded-lg;
+}
+
+.markdown-table {
+  @apply w-full border-collapse bg-white dark:bg-gray-800;
+}
+
+.markdown-table th {
+  @apply bg-gray-50 dark:bg-gray-800 text-left p-3 text-sm font-medium text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700;
+}
+
+.markdown-table td {
+  @apply p-3 text-sm text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700;
+}
+
+.markdown-table tbody tr:last-child td {
+  @apply border-b-0;
+}
+
+/* Ensure Mermaid diagrams work well in dark mode */
+.dark .mermaid-rendered svg {
+  filter: brightness(0.9) contrast(1.1);
+}
+
+/* Responsive improvements for Mermaid diagrams */
+@media (max-width: 768px) {
+  .mermaid-rendered svg {
+    @apply w-full;
+  }
+  
+  .mermaid-diagram {
+    @apply p-2;
+  }
+  
+  .mermaid-header {
+    @apply px-3 py-2;
+  }
+}
+
+/* Print styles for diagrams */
+@media print {
+  .mermaid-container,
+  .enhanced-code-block {
+    @apply break-inside-avoid;
+  }
+  
+  .mermaid-rendered svg {
+    @apply max-h-none;
+  }
+}
