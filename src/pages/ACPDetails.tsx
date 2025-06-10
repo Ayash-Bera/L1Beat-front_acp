@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { marked } from 'marked';
 import { ThemeToggle } from '../components/ThemeToggle';
+import { MarkdownRenderer } from '../components/MarkdownRenderer';
 import { Footer } from '../components/Footer';
 import {
   ArrowLeft,
@@ -21,13 +21,10 @@ import {
   Link as LinkIcon
 } from 'lucide-react';
 import { getACPByNumber, LocalACP } from '../data/acps';
-import 'github-markdown-css/github-markdown.css';
-import { useTheme } from '../hooks/useTheme';
 
 export function ACPDetails() {
   const { number } = useParams();
   const navigate = useNavigate();
-  const { theme } = useTheme();
   const [acp, setAcp] = useState<LocalACP | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -61,16 +58,6 @@ export function ACPDetails() {
       fetchACP();
     }
   }, [number]);
-
-  // Configure marked options for better rendering
-  useEffect(() => {
-    marked.setOptions({
-      breaks: true,
-      gfm: true,
-      headerIds: true,
-      headerPrefix: 'acp-',
-    });
-  }, []);
 
   function getStatusColor(status: string): string {
     const statusLower = status.toLowerCase();
@@ -367,9 +354,9 @@ export function ACPDetails() {
           {/* ACP Content */}
           <div className="bg-white dark:bg-dark-800 rounded-lg shadow-md overflow-hidden">
             <div className="p-6">
-              <div
-                className={`acp-markdown-content ${theme === 'dark' ? 'markdown-body-dark' : 'markdown-body'} max-w-none`}
-                dangerouslySetInnerHTML={{ __html: marked(acp.content) }}
+              <MarkdownRenderer
+                content={acp.content}
+                className="prose-lg"
               />
             </div>
           </div>
