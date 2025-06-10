@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ThemeToggle } from '../components/ThemeToggle';
+import { StatusBar } from '../components/StatusBar';
 import { Footer } from '../components/Footer';
 import {
   FileText,
@@ -31,6 +31,8 @@ import {
   LocalACP,
   ACPStats
 } from '../data/acps';
+import { getHealth } from '../api';
+import { HealthStatus } from '../types';
 
 type ViewMode = 'grid' | 'list';
 type SortOption = 'number' | 'title' | 'status' | 'complexity';
@@ -48,6 +50,7 @@ export function ACPs() {
   const navigate = useNavigate();
   const [acps, setAcps] = useState<LocalACP[]>([]);
   const [stats, setStats] = useState<ACPStats | null>(null);
+  const [health, setHealth] = useState<HealthStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -73,13 +76,15 @@ export function ACPs() {
         setLoading(true);
         setError(null);
 
-        const [acpsData, statsData] = await Promise.all([
+        const [acpsData, statsData, healthData] = await Promise.all([
           getAllLocalACPs(),
-          getACPStats()
+          getACPStats(),
+          getHealth()
         ]);
 
         setAcps(acpsData);
         setStats(statsData);
+        setHealth(healthData);
       } catch (err) {
         console.error('Error loading ACPs:', err);
         setError('Failed to load ACPs from local files');
@@ -176,6 +181,7 @@ export function ACPs() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-dark-900 flex flex-col">
+        <StatusBar health={health} />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <RefreshCw className="w-12 h-12 text-blue-500 animate-spin mx-auto mb-4" />
@@ -189,6 +195,7 @@ export function ACPs() {
   if (error) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-dark-900 flex flex-col">
+        <StatusBar health={health} />
         <div className="flex-1 flex items-center justify-center p-4">
           <div className="text-center">
             <AlertTriangle className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
@@ -213,19 +220,18 @@ export function ACPs() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-dark-900 flex flex-col">
+      <StatusBar health={health} />
+
       <div className="flex-1">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Header */}
-          <div className="flex justify-between items-center mb-8">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                Avalanche Community Proposals
-              </h1>
-              <p className="text-gray-600 dark:text-gray-300 mt-2">
-                Browse and explore all ACPs in the Avalanche ecosystem
-              </p>
-            </div>
-            <ThemeToggle />
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              Avalanche Community Proposals
+            </h1>
+            <p className="text-gray-600 dark:text-gray-300 mt-2">
+              Browse and explore all ACPs in the Avalanche ecosystem
+            </p>
           </div>
 
           {/* Statistics Cards */}
@@ -310,8 +316,8 @@ export function ACPs() {
                   <button
                     onClick={() => setViewMode('grid')}
                     className={`p-2 rounded-md transition-colors ${viewMode === 'grid'
-                      ? 'bg-white dark:bg-dark-800 text-gray-900 dark:text-white shadow-sm'
-                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                        ? 'bg-white dark:bg-dark-800 text-gray-900 dark:text-white shadow-sm'
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
                       }`}
                   >
                     <Grid className="w-4 h-4" />
@@ -319,8 +325,8 @@ export function ACPs() {
                   <button
                     onClick={() => setViewMode('list')}
                     className={`p-2 rounded-md transition-colors ${viewMode === 'list'
-                      ? 'bg-white dark:bg-dark-800 text-gray-900 dark:text-white shadow-sm'
-                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                        ? 'bg-white dark:bg-dark-800 text-gray-900 dark:text-white shadow-sm'
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
                       }`}
                   >
                     <List className="w-4 h-4" />
